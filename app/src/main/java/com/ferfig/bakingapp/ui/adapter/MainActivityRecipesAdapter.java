@@ -50,21 +50,18 @@ public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivit
         return mData.size();
     }
 
-    public class RecipsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class RecipsViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.tvRecipName)
-        TextView recipName;
+        TextView tvRecipName;
 
         public RecipsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        @Override
-        public void onClick(View v) {
-
-        }
         public void bind(final Recip recipData, final OnItemClickListener listener) {
             String recipName = recipData.getName();
+            tvRecipName.setText(recipName);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
