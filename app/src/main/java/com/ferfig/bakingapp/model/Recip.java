@@ -3,6 +3,7 @@ package com.ferfig.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,8 @@ import java.util.Map;
 public class Recip implements Parcelable{
     private Integer id;
     private String name;
-    private List<Ingredient> ingredients = null;
-    private List<Step> steps = null;
+    private List<Ingredient> ingredients = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
     private Integer servings;
     private String image;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -25,8 +26,7 @@ public class Recip implements Parcelable{
             return (new Recip[size]);
         }
 
-    }
-            ;
+    };
 
     protected Recip(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
