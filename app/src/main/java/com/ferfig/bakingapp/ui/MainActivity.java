@@ -2,18 +2,16 @@ package com.ferfig.bakingapp.ui;
 
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.api.HttpRecipsClient;
@@ -53,8 +51,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        //Always prepare the recycler view LayoutManager
+        rvMainRecyclerView.setLayoutManager(setupMainLayoutManager());
 
         getRecipsData(savedInstanceState);
+    }
+
+    private LinearLayoutManager setupMainLayoutManager(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+                OrientationHelper.VERTICAL,false);
+        //Add a divider
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                rvMainRecyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        rvMainRecyclerView.addItemDecoration(dividerItemDecoration);
+        return linearLayoutManager;
     }
 
     @Override
@@ -63,18 +74,27 @@ public class MainActivity extends AppCompatActivity {
             outState.putParcelableArrayList(Utils.ALL_RECIPS_SAVED_INSTANCE,
                     new ArrayList<Parcelable>(mRecipList));
         }
-//        outState.putParcelable(Utils.RECLYCLER_SAVED_INSTANCE,
-//                rvMainRecyclerView.getLayoutManager().onSaveInstanceState());
+        if (rvMainRecyclerView!=null && rvMainRecyclerView.getLayoutManager() != null) {
+            outState.putParcelable(Utils.RECLYCLER_SAVED_INSTANCE,
+                    rvMainRecyclerView.getLayoutManager().onSaveInstanceState());
+        }
         super.onSaveInstanceState(outState);
     }
 
     private void getRecipsData(Bundle savedInstanceState){
         if (savedInstanceState != null){
-            mRecipList = savedInstanceState.getParcelableArrayList(Utils.ALL_RECIPS_SAVED_INSTANCE);
-//            Parcelable savedRecyclerState = savedInstanceState.getParcelable(Utils.RECLYCLER_SAVED_INSTANCE);
-//            rvMainRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerState);
+            //restore recipes list
+            if (savedInstanceState.containsKey(Utils.ALL_RECIPS_SAVED_INSTANCE)) {
+                mRecipList = savedInstanceState.getParcelableArrayList(Utils.ALL_RECIPS_SAVED_INSTANCE);
+            }
+            //restore recycler view state
+            if (savedInstanceState.containsKey(Utils.RECLYCLER_SAVED_INSTANCE)) {
+                Parcelable savedRecyclerState = savedInstanceState.getParcelable(Utils.RECLYCLER_SAVED_INSTANCE);
+                rvMainRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerState);
+            }
+            //set the adapter
             setMainRecipAdapter(mRecipList);
-
+            //set the gui visible objects
             pbProgressBar.setVisibility(View.GONE);
             rvMainRecyclerView.setVisibility(View.VISIBLE);
             tvErrorMessage.setVisibility(View.GONE);
@@ -90,12 +110,12 @@ public class MainActivity extends AppCompatActivity {
                 Call<List<Recip>> recipsCall =  client.getRecips();
                 recipsCall.enqueue(new Callback<List<Recip>>() {
                     @Override
-                    public void onResponse(Call<List<Recip>> call, Response<List<Recip>> response) {
+                    public void onResponse(Call<List<Recip>> call, @NonNull Response<List<Recip>> response) {
                         if (response.code() == 200) {
                             mRecipList = response.body();
 
-                            //TODO save in database here?!
-                            //make the room action in asynctask or rxjava
+//TODO save in database here?!
+                          //make the room action in asynctask or rxjava
 //                        RecipDao recipDao = BakingDatabase
 //                                .getInstance(getContext())
 //                                .getRecipsDao();
@@ -142,26 +162,12 @@ public class MainActivity extends AppCompatActivity {
                 new MainActivityRecipesAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Recip recipData) {
-                        //TODO prepare the intent to call detail activity/fragment
-                        //And send it to the detail activity
-                        Toast.makeText(getApplicationContext(),
-                                "clicked: " + recipData.getName(),
-                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), RecipeDetailsActivity.class);
+                        intent.putExtra(Utils.RECIPE_DATA_OBJECT, recipData);
+                        startActivity(intent);
                     }
                 });
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
-                OrientationHelper.VERTICAL,false);
-
-        //Add a divider
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                rvMainRecyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        rvMainRecyclerView.addItemDecoration(dividerItemDecoration);
-
-        rvMainRecyclerView.setLayoutManager(linearLayoutManager);
-
         rvMainRecyclerView.setAdapter(rvAdapter);
     }
-
 }

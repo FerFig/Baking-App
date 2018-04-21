@@ -4,4 +4,8 @@
     <string name="error_no_network">Oops! There is no connectivity!\nPlease make sure you have an internet connection.</string>
     <string name="error_failed_response">Oops! There was a wrong response from web request!\nPlease restart the activity and make sure you have an internet connection.</string>
     <string name="error_failed_network_request">Oops! Something went wrong!\nThe developer should correct this! Please report this to him.</string>
+    <string name="title_activity_step_details">StepDetailsActivity</string>
+    <string name="nav_prev_step">Prev.</string>
+    <string name="nav_next_step">Next</string>
+    <string name="title_activity_steps">Recipe Name</string>
 </resources>

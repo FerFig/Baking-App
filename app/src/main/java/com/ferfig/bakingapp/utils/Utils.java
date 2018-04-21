@@ -12,6 +12,8 @@ public class Utils {
 
     public static final String ALL_RECIPS_SAVED_INSTANCE = "com.ferfig.bakingapp.ALL_RECIPS";
     public static final String RECLYCLER_SAVED_INSTANCE = "com.ferfig.bakingapp.RECLYCLER_STATE";
+    public static final String RECIPE_DATA_OBJECT = "com.ferfig.bakingapp.RECIPE_DATA";
+    public static final String CURRENT_STEP_OBJECT = "com.ferfig.bakingapp.CURRENT_STEP";
 
     public static boolean isInternetConectionAvailable(Context context) {
         if (context.getSystemService(Context.CONNECTIVITY_SERVICE)!=null) {
