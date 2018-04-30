@@ -51,9 +51,9 @@ dependencies {
 //
 //    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 //
-//    // Room
-//    implementation "android.arch.persistence.room:runtime:1.0.0"
-//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    // Room
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 //    // Paging
 //    implementation "android.arch.paging:runtime:1.0.0-beta1"
 //
@@ -63,4 +63,5 @@ dependencies {
 //    // Test helpers for Room
 //    testImplementation "android.arch.persistence.room:testing:1.0.0"
 
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }

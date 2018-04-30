@@ -1,7 +1,4 @@
-package com.ferfig.bakingapp.model;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.ferfig.bakingapp.model.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,7 +10,6 @@ public class Step implements Parcelable
     private String description;
     private String videoURL;
     private String thumbnailURL;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
 
         public Step createFromParcel(Parcel in) {
@@ -33,7 +29,6 @@ public class Step implements Parcelable
         this.description = ((String) in.readValue((String.class.getClassLoader())));
         this.videoURL = ((String) in.readValue((String.class.getClassLoader())));
         this.thumbnailURL = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
     }
 
     public Step() {
@@ -79,21 +74,12 @@ public class Step implements Parcelable
         this.thumbnailURL = thumbnailURL;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(shortDescription);
         dest.writeValue(description);
         dest.writeValue(videoURL);
         dest.writeValue(thumbnailURL);
-        dest.writeValue(additionalProperties);
     }
 
     public int describeContents() {

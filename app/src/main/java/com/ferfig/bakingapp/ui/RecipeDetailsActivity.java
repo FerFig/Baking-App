@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.model.Recip;
+import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.utils.Utils;
 
 import butterknife.ButterKnife;
@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private static Recip mRecipeDetails;
+    private static Recip mRecipFromDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             Intent receivedIntent = getIntent();
             if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
                 mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
+//TODO retrieve recip from DB
+//                new AsyncTask() {
+//                    @Override
+//                    protected Boolean doInBackground(Object[] objects) {
+//                        Boolean b = false;
+//                        if (objects.length == 1) {
+//                            Integer recipId = (Integer) objects[0];
+//                            BakingAppDB bakingAppDB = BakingAppDB.getInstance(getApplicationContext());
+//                            RecipDao recipDao = bakingAppDB.recipDao();
+//                            mRecipFromDB = recipDao.getRecipById(recipId);
+//                            if (mRecipeDetails == mRecipFromDB){
+//                                b = true;
+//                            }else {
+//                                b = false;
+//                            }
+//                        }
+//                        return b;
+//                    }
+//                }.execute(mRecipeDetails.getId());
 
             }else{//is not supposed too...
                 finish();

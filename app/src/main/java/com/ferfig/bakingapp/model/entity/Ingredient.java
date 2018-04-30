@@ -1,19 +1,15 @@
 
-package com.ferfig.bakingapp.model;
+package com.ferfig.bakingapp.model.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Ingredient implements Parcelable
 {
-
     private Float quantity;
     private String measure;
     private String ingredient;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
     public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
 
         public Ingredient createFromParcel(Parcel in) {
@@ -31,7 +27,6 @@ public class Ingredient implements Parcelable
         this.quantity = ((Float) in.readValue((Integer.class.getClassLoader())));
         this.measure = ((String) in.readValue((String.class.getClassLoader())));
         this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
     }
 
     public Ingredient() {
@@ -61,19 +56,10 @@ public class Ingredient implements Parcelable
         this.ingredient = ingredient;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(quantity);
         dest.writeValue(measure);
         dest.writeValue(ingredient);
-        dest.writeValue(additionalProperties);
     }
 
     public int describeContents() {

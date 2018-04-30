@@ -1,21 +1,28 @@
-package com.ferfig.bakingapp.model;
+package com.ferfig.bakingapp.model.entity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ferfig.bakingapp.model.converter.DataTypeConverter;
+import com.ferfig.bakingapp.utils.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(tableName = Utils.DB_TABLE_RECIPES)
 public class Recip implements Parcelable{
+    @PrimaryKey
     private Integer id;
     private String name;
+    @TypeConverters(DataTypeConverter.class)
     private List<Ingredient> ingredients = new ArrayList<>();
+    @TypeConverters(DataTypeConverter.class)
     private List<Step> steps = new ArrayList<>();
     private Integer servings;
     private String image;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
     public final static Parcelable.Creator<Recip> CREATOR = new Creator<Recip>() {
 
         public Recip createFromParcel(Parcel in) {
@@ -35,7 +42,6 @@ public class Recip implements Parcelable{
         in.readList(this.steps, (Step.class.getClassLoader()));
         this.servings = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.image = ((String) in.readValue((String.class.getClassLoader())));
-        this.additionalProperties = ((Map<String, Object> ) in.readValue((Map.class.getClassLoader())));
     }
 
     public Recip() {
@@ -89,14 +95,6 @@ public class Recip implements Parcelable{
         this.image = image;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(name);
@@ -104,7 +102,6 @@ public class Recip implements Parcelable{
         dest.writeList(steps);
         dest.writeValue(servings);
         dest.writeValue(image);
-        dest.writeValue(additionalProperties);
     }
 
     public int describeContents() {

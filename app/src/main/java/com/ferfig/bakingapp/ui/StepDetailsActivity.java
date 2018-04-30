@@ -9,8 +9,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.model.Recip;
-import com.ferfig.bakingapp.model.Step;
+import com.ferfig.bakingapp.model.entity.Recip;
+import com.ferfig.bakingapp.model.entity.Step;
 import com.ferfig.bakingapp.utils.Utils;
 
 import butterknife.BindView;

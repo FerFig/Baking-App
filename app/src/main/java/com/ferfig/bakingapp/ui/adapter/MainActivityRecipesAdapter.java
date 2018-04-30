@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.model.Recip;
+import com.ferfig.bakingapp.model.entity.Recip;
 
 import java.util.List;
 
