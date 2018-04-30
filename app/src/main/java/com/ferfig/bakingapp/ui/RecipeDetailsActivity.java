@@ -13,7 +13,6 @@ import butterknife.ButterKnife;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private static Recip mRecipeDetails;
-    private static Recip mRecipFromDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +34,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //                            Integer recipId = (Integer) objects[0];
 //                            BakingAppDB bakingAppDB = BakingAppDB.getInstance(getApplicationContext());
 //                            RecipDao recipDao = bakingAppDB.recipDao();
+//                            Recip mRecipFromDB;
 //                            mRecipFromDB = recipDao.getRecipById(recipId);
-//                            if (mRecipeDetails == mRecipFromDB){
+//                            if (mRecipeDetails.getId() == mRecipFromDB.getId()){
 //                                b = true;
 //                            }else {
 //                                b = false;
