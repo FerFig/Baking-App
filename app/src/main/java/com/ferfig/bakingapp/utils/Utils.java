@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.ferfig.bakingapp.R;
+
 public class Utils {
     public static final String APP_TAG = "BackingAppByFF";
 
@@ -30,4 +32,7 @@ public class Utils {
         return true;
     }
 
+    public static boolean isTwoPaneLayout(Context context) {
+        return context.getResources().getBoolean(R.bool.isTablet);
+    }
 }

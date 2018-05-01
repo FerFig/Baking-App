@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager setupMainLayoutManager(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 OrientationHelper.VERTICAL,false);
-        //Add a divider
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                rvMainRecyclerView.getContext(),
-                linearLayoutManager.getOrientation());
-        rvMainRecyclerView.addItemDecoration(dividerItemDecoration);
+//        //Add a divider
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+//                rvMainRecyclerView.getContext(),
+//                linearLayoutManager.getOrientation());
+//        rvMainRecyclerView.addItemDecoration(dividerItemDecoration);
         return linearLayoutManager;
     }
 
