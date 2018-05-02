@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".ui.RecipeDetailsActivity"
                   android:label="@string/title_activity_steps"
-                  android:parentActivityName=".ui.MainActivity">
+                  android:parentActivityName=".ui.MainActivity"
+                  android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ferfig.bakingapp.ui.MainActivity"/>
@@ -31,7 +32,8 @@
         <activity
             android:name=".ui.StepDetailsActivity"
             android:label="@string/title_activity_step_details"
-            android:parentActivityName=".ui.RecipeDetailsActivity">
+            android:parentActivityName=".ui.RecipeDetailsActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ferfig.bakingapp.ui.RecipeDetailsActivity"/>
