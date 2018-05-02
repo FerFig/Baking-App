@@ -40,7 +40,7 @@ public class StepDetailsActivity extends AppCompatActivity {
             if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)
                     && receivedIntent.hasExtra(Utils.CURRENT_STEP_OBJECT)) {
                 mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
-                mCurrentStep = receivedIntent.getParcelableExtra(Utils.CURRENT_STEP_OBJECT);;
+                mCurrentStep = receivedIntent.getParcelableExtra(Utils.CURRENT_STEP_OBJECT);
             }else{//is not supposed too...
                 Toast.makeText(getApplicationContext(), R.string.ImplementationErrorMessage, Toast.LENGTH_SHORT).show();
                 finish();
