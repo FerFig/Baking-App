@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 Call<List<Recip>> recipsCall =  client.getRecips();
                 recipsCall.enqueue(new Callback<List<Recip>>() {
                     @Override
-                    public void onResponse(Call<List<Recip>> call, @NonNull Response<List<Recip>> response) {
+                    public void onResponse(@NonNull Call<List<Recip>> call, @NonNull Response<List<Recip>> response) {
                         if (response.code() == 200) {
                             mRecipList = response.body();
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Recip>> call, Throwable t) {
+                    public void onFailure(@NonNull Call<List<Recip>> call, @NonNull Throwable t) {
                         pbProgressBar.setVisibility(View.GONE);
                         rvMainRecyclerView.setVisibility(View.GONE);
                         tvErrorMessage.setVisibility(View.VISIBLE);

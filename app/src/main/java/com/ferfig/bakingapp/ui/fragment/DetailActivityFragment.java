@@ -1,5 +1,6 @@
 package com.ferfig.bakingapp.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,16 +52,20 @@ public class DetailActivityFragment extends Fragment {
         rvStepsRecyclerView.setLayoutManager(setupStepsLayoutManager());
 
         if (savedInstanceState == null) {
-            Intent receivedIntent = getActivity().getIntent();
-            if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
-                mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
+            Activity activity = getActivity();
+            if (activity != null) {
+                Intent receivedIntent = activity.getIntent();
+                if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
+                    mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
+                }
             }
         }else{
             mRecipeDetails = savedInstanceState.getParcelable(Utils.RECIPE_DATA_OBJECT);
         }
 
-        setStepsAdapter(mRecipeDetails.getSteps());
-
+        if (mRecipeDetails != null) {
+            setStepsAdapter(mRecipeDetails.getSteps());
+        }
         return  rootView;
     }
 
@@ -91,9 +96,8 @@ public class DetailActivityFragment extends Fragment {
     }
 
     private LinearLayoutManager setupStepsLayoutManager(){
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext,
+        return new LinearLayoutManager(mContext,
                 OrientationHelper.VERTICAL,false);
-        return linearLayoutManager;
     }
 
     // To communicate between fragments through the host activity ...

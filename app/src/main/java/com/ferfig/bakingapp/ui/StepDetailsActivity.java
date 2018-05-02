@@ -97,10 +97,10 @@ public class StepDetailsActivity extends AppCompatActivity {
         tvStepName.setText(mCurrentStep.getShortDescription());
 
         MenuItem bnPrevButton = stepsNavigationView.getMenu().getItem(0);
-        bnPrevButton.setEnabled( mCurrentStep.getId() != mRecipeDetails.getSteps()
-                .get(0).getId() /* Is not first step */);
+        bnPrevButton.setEnabled( mCurrentStep.getId().equals(mRecipeDetails.getSteps()
+                .get(0).getId()) /* Is not first step */);
         MenuItem bnNextButton = stepsNavigationView.getMenu().getItem(1);
-        bnNextButton.setEnabled ( mCurrentStep.getId() != mRecipeDetails.getSteps()
-                .get(mRecipeDetails.getSteps().size()-1).getId() /* Is not last step */ );
+        bnNextButton.setEnabled ( mCurrentStep.getId().equals(mRecipeDetails.getSteps()
+                .get(mRecipeDetails.getSteps().size()-1).getId()) /* Is not last step */ );
     }
 }
