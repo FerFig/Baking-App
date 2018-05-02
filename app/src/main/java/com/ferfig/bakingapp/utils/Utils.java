@@ -3,6 +3,9 @@ package com.ferfig.bakingapp.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.Display;
+import android.view.Surface;
+import android.view.WindowManager;
 
 import com.ferfig.bakingapp.R;
 
@@ -35,4 +38,9 @@ public class Utils {
     public static boolean isTwoPaneLayout(Context context) {
         return context.getResources().getBoolean(R.bool.isTablet);
     }
+
+    public static boolean isDeviceInLandscape(Context context){
+        return context.getResources().getBoolean(R.bool.isInLandscape);
+    }
+
 }

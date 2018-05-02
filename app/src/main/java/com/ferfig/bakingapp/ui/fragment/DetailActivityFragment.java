@@ -83,10 +83,6 @@ public class DetailActivityFragment extends Fragment {
 
                     @Override
                     public void onItemClick(Step stepData) {
-                        Intent intent = new Intent(mContext, StepDetailsActivity.class);
-                        intent.putExtra(Utils.RECIPE_DATA_OBJECT, mRecipeDetails);
-                        intent.putExtra(Utils.CURRENT_STEP_OBJECT, stepData);
-                        startActivity(intent);
                         //notify the parent activity of the clicked item
                         mCallback.onStepSelected(stepData);
                     }
