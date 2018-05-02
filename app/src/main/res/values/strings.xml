@@ -8,4 +8,5 @@
     <string name="nav_prev_step">Prev.</string>
     <string name="nav_next_step">Next</string>
     <string name="title_activity_steps">Recipe Name</string>
+    <string name="ImplementationErrorMessage">Oops… Something went wrong!</string>
 </resources>
