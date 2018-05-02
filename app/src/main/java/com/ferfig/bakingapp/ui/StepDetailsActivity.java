@@ -7,6 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.model.entity.Recip;
@@ -21,11 +22,11 @@ public class StepDetailsActivity extends AppCompatActivity {
     private static Recip mRecipeDetails;
     private static Step mCurrentStep;
 
-    @BindView(R.id.message)
-    TextView mTextMessage;
+    @BindView(R.id.tvStepName)
+    TextView tvStepName;
 
     @BindView(R.id.navigation)
-    BottomNavigationView bottomNavigationView;
+    BottomNavigationView stepsNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,12 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Intent receivedIntent = getIntent();
-            if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
+            if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)
+                    && receivedIntent.hasExtra(Utils.CURRENT_STEP_OBJECT)) {
                 mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
-                mCurrentStep = mRecipeDetails.getSteps().get(0);
+                mCurrentStep = receivedIntent.getParcelableExtra(Utils.CURRENT_STEP_OBJECT);;
             }else{//is not supposed too...
+                Toast.makeText(getApplicationContext(), R.string.ImplementationErrorMessage, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }else{
@@ -47,9 +50,12 @@ public class StepDetailsActivity extends AppCompatActivity {
             mCurrentStep = savedInstanceState.getParcelable(Utils.CURRENT_STEP_OBJECT);
         }
 
-        if (mCurrentStep != null) this.setTitle(mCurrentStep.getShortDescription());
+        if (mRecipeDetails != null) this.setTitle(mRecipeDetails.getName());
+        if (mCurrentStep!= null) tvStepName.setText(mCurrentStep.getShortDescription());
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        stepsNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        showCurrentStepUI();
     }
 
     @Override
@@ -65,14 +71,36 @@ public class StepDetailsActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.nav_prev_step);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.nav_next_step);
-                    return true;
+                case R.id.prev_step:
+                    for (int i = 0; i < mRecipeDetails.getSteps().size(); i++) {
+                        if (mRecipeDetails.getSteps().get(i).getId().equals(mCurrentStep.getId())) {
+                            mCurrentStep = mRecipeDetails.getSteps().get(i-1);
+                            break;
+                        }
+                    }
+                    break;
+                case R.id.next_step:
+                    for (int i = 0; i < mRecipeDetails.getSteps().size(); i++) {
+                        if (mRecipeDetails.getSteps().get(i).getId().equals(mCurrentStep.getId())) {
+                            mCurrentStep = mRecipeDetails.getSteps().get(i+1);
+                            break;
+                        }
+                    }
+                    break;
             }
-            return false;
+            showCurrentStepUI();
+            return true;
         }
     };
+
+    private void showCurrentStepUI() {
+        tvStepName.setText(mCurrentStep.getShortDescription());
+
+        MenuItem bnPrevButton = stepsNavigationView.getMenu().getItem(0);
+        bnPrevButton.setEnabled( mCurrentStep.getId() != mRecipeDetails.getSteps()
+                .get(0).getId() /* Is not first step */);
+        MenuItem bnNextButton = stepsNavigationView.getMenu().getItem(1);
+        bnNextButton.setEnabled ( mCurrentStep.getId() != mRecipeDetails.getSteps()
+                .get(mRecipeDetails.getSteps().size()-1).getId() /* Is not last step */ );
+    }
 }

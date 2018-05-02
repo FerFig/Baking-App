@@ -3,14 +3,16 @@ package com.ferfig.bakingapp.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.model.entity.Recip;
+import com.ferfig.bakingapp.model.entity.Step;
+import com.ferfig.bakingapp.ui.fragment.DetailActivityFragment;
 import com.ferfig.bakingapp.utils.Utils;
 
-import butterknife.ButterKnife;
 
-public class RecipeDetailsActivity extends AppCompatActivity {
+public class RecipeDetailsActivity extends AppCompatActivity implements DetailActivityFragment.OnStepClickedListener{
 
     private static Recip mRecipeDetails;
 
@@ -18,8 +20,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
-
-        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             Intent receivedIntent = getIntent();
@@ -47,6 +47,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //                }.execute(mRecipeDetails.getId());
 
             }else{//is not supposed too...
+                Toast.makeText(getApplicationContext(), R.string.ImplementationErrorMessage, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }else{
@@ -60,5 +61,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(Utils.RECIPE_DATA_OBJECT, mRecipeDetails);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStepSelected(Step step) {
+        Toast.makeText(this, "Step clicked: " + step.getShortDescription(), Toast.LENGTH_SHORT).show();
     }
 }

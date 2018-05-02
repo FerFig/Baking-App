@@ -1,12 +1,12 @@
 package com.ferfig.bakingapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +22,7 @@ import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.ui.adapter.MainActivityRecipesAdapter;
 import com.ferfig.bakingapp.utils.Utils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,24 +118,9 @@ public class MainActivity extends AppCompatActivity {
                         if (response.code() == 200) {
                             mRecipList = response.body();
 
-                            //TODO save in database here?! and make it in asynctask
-                            new AsyncTask() {
-                                @Override
-                                protected Object doInBackground(Object[] objects) {
-                                    if (objects.length == 1) {
-                                        List<Recip> mRecipes = (List<Recip>) objects[0];
-                                        BakingAppDB bakingAppDB = BakingAppDB.getInstance(getApplicationContext());
-                                        RecipDao recipDao = bakingAppDB.recipDao();
-                                        recipDao.insertAll(mRecipes);
-                                        bakingAppDB.close();
-                                    }
-                                    return null;
-                                }
-                            }.execute(mRecipList);
-
-                            //asyncTask.execute(mRecipList);
-
                             setMainRecipAdapter(mRecipList);
+
+                            saveToDatabase(new WeakReference<>(getApplicationContext()));
 
                             pbProgressBar.setVisibility(View.GONE);
                             rvMainRecyclerView.setVisibility(View.VISIBLE);
@@ -167,6 +153,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    private static void saveToDatabase(final WeakReference<Context> weakContext) {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                if (objects.length == 1) {
+                    List<Recip> mRecipes = (List<Recip>) objects[0];
+                    BakingAppDB bakingAppDB = BakingAppDB.getInstance(weakContext.get());
+                    RecipDao recipDao = bakingAppDB.recipDao();
+                    recipDao.insertAll(mRecipes);
+                    bakingAppDB.close();
+                }
+                return null;
+            }
+        }.execute(mRecipList);
     }
 
     private void setMainRecipAdapter(List<Recip> recipList) {

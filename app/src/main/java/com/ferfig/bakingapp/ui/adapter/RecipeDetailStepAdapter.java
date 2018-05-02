@@ -9,24 +9,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.model.entity.Recip;
+import com.ferfig.bakingapp.model.entity.Step;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivityRecipesAdapter.RecipsViewHolder>{
+public class RecipeDetailStepAdapter extends RecyclerView.Adapter<RecipeDetailStepAdapter.StepViewHolder>{
     private final Context mContext;
 
-    private final List<Recip> mData;
+    private final List<Step> mData;
 
     public interface OnItemClickListener {
-        void onItemClick(Recip recipData);
+        void onItemClick(Step stepData);
     }
     private final OnItemClickListener itemClickListener;
 
-    public MainActivityRecipesAdapter(Context mContext, List<Recip> mData, OnItemClickListener itemClickListener) {
+    public RecipeDetailStepAdapter(Context mContext, List<Step> mData, OnItemClickListener itemClickListener) {
         this.mContext = mContext;
         this.mData = mData;
         this.itemClickListener = itemClickListener;
@@ -34,14 +34,14 @@ public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivit
 
     @NonNull
     @Override
-    public RecipsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StepViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater mInftr = LayoutInflater.from(mContext);
-        View view = mInftr.inflate(R.layout.main_recipes_card_view, parent, false);
-        return new RecipsViewHolder(view);
+        View view = mInftr.inflate(R.layout.steps_card_view, parent, false);
+        return new StepViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull StepViewHolder holder, int position) {
         holder.bind(mData.get(position), this.itemClickListener);
     }
 
@@ -50,23 +50,23 @@ public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivit
         return mData.size();
     }
 
-    public class RecipsViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.tvRecipName)
-        TextView tvRecipName;
+    public class StepViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.tvStepName)
+        TextView tvStepName;
 
-        public RecipsViewHolder(View itemView) {
+        public StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(final Recip recipData, final OnItemClickListener listener) {
-            String recipName = recipData.getName();
-            tvRecipName.setText(recipName);
+        public void bind(final Step stepData, final OnItemClickListener listener) {
+            String stepName = stepData.getShortDescription();
+            tvStepName.setText(stepName);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     if (listener!=null) {
-                        listener.onItemClick(recipData);
+                        listener.onItemClick(stepData);
                     }
                 }
             });
