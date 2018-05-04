@@ -3,11 +3,10 @@ package com.ferfig.bakingapp.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.view.Display;
-import android.view.Surface;
-import android.view.WindowManager;
 
 import com.ferfig.bakingapp.R;
+
+import java.util.Locale;
 
 public class Utils {
     public static final String APP_TAG = "BackingAppByFF";
@@ -43,4 +42,10 @@ public class Utils {
         return context.getResources().getBoolean(R.bool.isInLandscape);
     }
 
+    public static String formatQuantity(float quantity) {
+        if((long)quantity == quantity)
+            return String.format(Locale.getDefault(), "%d",(long)quantity);
+        else
+            return String.format("%s", quantity);
+    }
 }

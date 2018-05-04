@@ -18,7 +18,9 @@ import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.api.HttpRecipsClient;
 import com.ferfig.bakingapp.model.dao.RecipDao;
 import com.ferfig.bakingapp.model.database.BakingAppDB;
+import com.ferfig.bakingapp.model.entity.Ingredient;
 import com.ferfig.bakingapp.model.entity.Recip;
+import com.ferfig.bakingapp.model.entity.Step;
 import com.ferfig.bakingapp.ui.adapter.MainActivityRecipesAdapter;
 import com.ferfig.bakingapp.utils.Utils;
 
@@ -35,6 +37,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+    private static final Integer INGREDIENTS_STEP_ID = 927;
+    private static final String OS_LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String EMPTY_STRING = "";
+
     static List<Recip> mRecipList;
 
     @SuppressWarnings("WeakerAccess")
@@ -177,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 new MainActivityRecipesAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(Recip recipData) {
+
+                        //Add ingredients as first step :)
+                        addIngredientsStep(recipData);
+
                         Intent intent = new Intent(getApplicationContext(), RecipeDetailsActivity.class);
                         intent.putExtra(Utils.RECIPE_DATA_OBJECT, recipData);
                         startActivity(intent);
@@ -185,4 +195,30 @@ public class MainActivity extends AppCompatActivity {
 
         rvMainRecyclerView.setAdapter(rvAdapter);
     }
+
+    /** Add Ingredients as first step (if not already added) */
+    private void addIngredientsStep(Recip recipData) {
+        if ( !recipData.getSteps().get(0).getId().equals(INGREDIENTS_STEP_ID) ) {
+            Step ingredientsStep = new Step();
+            ingredientsStep.setId(INGREDIENTS_STEP_ID);
+            ingredientsStep.setShortDescription(getString(R.string.IngredientsLabel));
+            ingredientsStep.setThumbnailURL(EMPTY_STRING);
+            ingredientsStep.setVideoURL(EMPTY_STRING);
+            StringBuilder allIngredients = new StringBuilder();
+            for (Ingredient ingredient : recipData.getIngredients()) {
+                allIngredients.append(Utils.formatQuantity(ingredient.getQuantity()));
+                allIngredients.append(ingredient.getMeasure());
+                allIngredients.append(getString(R.string.Quantity_Ingredient_Separator));
+                allIngredients.append(ingredient.getIngredient());
+                allIngredients.append(OS_LINE_SEPARATOR);
+            }
+            ingredientsStep.setDescription(allIngredients.toString());
+
+            List<Step> allSteps = new ArrayList<>();
+            allSteps.add(ingredientsStep);
+            allSteps.addAll(recipData.getSteps());
+            recipData.setSteps(allSteps);
+        }
+    }
+
 }
