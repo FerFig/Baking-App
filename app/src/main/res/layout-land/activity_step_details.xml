@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this activity in PHONE LANDSCAPE mode will show only the video part in full screen -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recipe_step_video_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:scaleType="centerInside">
+</FrameLayout>
+

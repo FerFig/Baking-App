@@ -3,6 +3,7 @@ package com.ferfig.bakingapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +26,15 @@ public class StepDetailsActivity extends AppCompatActivity {
     private static Recip mRecipeDetails;
     private static Step mCurrentStep;
 
+    @Nullable
     @BindView(R.id.tvStepName)
     TextView tvStepName;
 
+    @Nullable
     @BindView(R.id.tvStepDescription)
     TextView tvStepDescription;
 
+    @Nullable
     @BindView(R.id.navigation)
     BottomNavigationView stepsNavigationView;
 
@@ -57,9 +61,11 @@ public class StepDetailsActivity extends AppCompatActivity {
         }
 
         if (mRecipeDetails != null) this.setTitle(mRecipeDetails.getName());
-        if (mCurrentStep!= null) tvStepName.setText(mCurrentStep.getShortDescription());
 
-        stepsNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if  ( !Utils.isDeviceInLandscape(this) ) {
+            if (stepsNavigationView != null)
+                stepsNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        }
 
         showCurrentStepUI(true);
     }
@@ -100,14 +106,22 @@ public class StepDetailsActivity extends AppCompatActivity {
     };
 
     private void showCurrentStepUI(boolean fromCreate) {
-        tvStepName.setText(mCurrentStep.getShortDescription());
+        if  ( !Utils.isDeviceInLandscape(this) ) {
+            if (mCurrentStep != null && tvStepName != null && stepsNavigationView != null && tvStepDescription != null) {
 
-        MenuItem bnPrevButton = stepsNavigationView.getMenu().getItem(0);
-        bnPrevButton.setEnabled( !mCurrentStep.getId().equals(mRecipeDetails.getSteps()
-                .get(0).getId()) /* Is not first step */);
-        MenuItem bnNextButton = stepsNavigationView.getMenu().getItem(1);
-        bnNextButton.setEnabled ( !mCurrentStep.getId().equals(mRecipeDetails.getSteps()
-                .get(mRecipeDetails.getSteps().size()-1).getId()) /* Is not last step */ );
+                // display all info in portrait mode
+                tvStepName.setText(mCurrentStep.getShortDescription());
+
+                MenuItem bnPrevButton = stepsNavigationView.getMenu().getItem(0);
+                bnPrevButton.setEnabled(!mCurrentStep.getId().equals(mRecipeDetails.getSteps()
+                        .get(0).getId()) /* Is not first step */);
+                MenuItem bnNextButton = stepsNavigationView.getMenu().getItem(1);
+                bnNextButton.setEnabled(!mCurrentStep.getId().equals(mRecipeDetails.getSteps()
+                        .get(mRecipeDetails.getSteps().size() - 1).getId()) /* Is not last step */);
+
+                tvStepDescription.setText(mCurrentStep.getDescription());
+            }
+        }
 
         // Replace fragments to display new step information
         VideoPartFragment videoPartFragment = createVideoFragment();
@@ -117,13 +131,11 @@ public class StepDetailsActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .add(R.id.recipe_step_video_layout, videoPartFragment)
                     .commit();
-        }else{
+        } else {
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_video_layout, videoPartFragment)
                     .commit();
         }
-
-        tvStepDescription.setText(mCurrentStep.getDescription());
     }
 
     private VideoPartFragment createVideoFragment() {

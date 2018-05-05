@@ -3,10 +3,9 @@ package com.ferfig.bakingapp.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,18 +13,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.Window;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.model.entity.Step;
 import com.ferfig.bakingapp.utils.Utils;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -54,6 +48,8 @@ public class VideoPartFragment extends Fragment {
     SimpleExoPlayerView mExoPlyerView;
 
     Unbinder mBkUnbinder;
+
+    boolean isPlayerplaying;
 
     public VideoPartFragment() {
     }
@@ -94,8 +90,6 @@ public class VideoPartFragment extends Fragment {
             }
 
             if (mExoPlyer == null) {
-                //Handler mainHandler = new Handler();
-
                 // New ExoPlayer Instance
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
                 TrackSelection.Factory videoTrackSelectionFactory =
@@ -138,9 +132,58 @@ public class VideoPartFragment extends Fragment {
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+        if(mExoPlyer != null){
+            isPlayerplaying = mExoPlyer.getPlayWhenReady();
+            mExoPlyer.setPlayWhenReady(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mExoPlyer != null){
+            mExoPlyer.setPlayWhenReady(isPlayerplaying);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mBkUnbinder.unbind();
         releaseExoPlayer();
     }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (Utils.isDeviceInLandscape(mContext)) {
+            Activity activity = getActivity();
+            Window window = null;
+            View decorView = null;
+            if (activity != null)
+                window = activity.getWindow();
+            if (window != null) {
+                decorView = window.getDecorView();
+            }
+            toggleFullScreenmode(decorView);
+        }
+    }
+
+    private void toggleFullScreenmode(@Nullable View decorView){
+        if (decorView != null) {
+            int newUiOptions = decorView.getSystemUiVisibility();
+            // Navigation bar hiding:  Backwards compatible to ICS.
+            if (Build.VERSION.SDK_INT >= 14) {
+                newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
+            // Status bar hiding: Backwards compatible to Jellybean
+            if (Build.VERSION.SDK_INT >= 16) {
+                newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+            }
+            decorView.setSystemUiVisibility(newUiOptions);
+        }
+    }
+
 }
