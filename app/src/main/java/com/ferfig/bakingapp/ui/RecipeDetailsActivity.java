@@ -91,8 +91,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
             intent.putExtra(Utils.CURRENT_STEP_OBJECT, step);
             startActivity(intent);
         }
-
-        Toast.makeText(this, "Step clicked: " + step.getShortDescription(), Toast.LENGTH_SHORT).show();
     }
 
     private VideoPartFragment createVideoFragment(Step step) {
