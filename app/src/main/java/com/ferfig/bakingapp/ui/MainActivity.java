@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private static final Integer INGREDIENTS_STEP_ID = 927;
     private static final String OS_LINE_SEPARATOR = System.getProperty("line.separator");
     private static final String EMPTY_STRING = "";
+    private static final char SINGLE_SPACE_STRING = ' ';
+    private static final char BULLET_STRING = '·';
 
     static List<Recip> mRecipList;
 
@@ -206,9 +208,14 @@ public class MainActivity extends AppCompatActivity {
             ingredientsStep.setVideoURL(EMPTY_STRING);
             StringBuilder allIngredients = new StringBuilder();
             for (Ingredient ingredient : recipData.getIngredients()) {
+                allIngredients.append(BULLET_STRING);
+                allIngredients.append(SINGLE_SPACE_STRING);
                 allIngredients.append(Utils.formatQuantity(ingredient.getQuantity()));
+                allIngredients.append(SINGLE_SPACE_STRING);
                 allIngredients.append(ingredient.getMeasure());
+                allIngredients.append(SINGLE_SPACE_STRING);
                 allIngredients.append(getString(R.string.Quantity_Ingredient_Separator));
+                allIngredients.append(SINGLE_SPACE_STRING);
                 allIngredients.append(ingredient.getIngredient());
                 allIngredients.append(OS_LINE_SEPARATOR);
             }
