@@ -9,7 +9,7 @@ import com.ferfig.bakingapp.model.dao.RecipDao;
 import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.utils.Utils;
 
-@Database(entities = {Recip.class}, version = 1)
+@Database(entities = {Recip.class}, version = 1, exportSchema = false)
 public abstract class BakingAppDB extends RoomDatabase {
     private static BakingAppDB mDbInstance;
 
