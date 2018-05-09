@@ -10,4 +10,5 @@
     <string name="ImplementationErrorMessage">Oops… Something went wrong!</string>
     <string name="IngredientsLabel">Ingredients</string>
     <string name="Quantity_Ingredient_Separator">of</string>
+    <string name="step_with_no_video">This step has no video!</string>
 </resources>

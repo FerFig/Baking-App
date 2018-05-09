@@ -19,6 +19,7 @@ public class Utils {
     public static final String RECIPE_DATA_OBJECT = "com.ferfig.bakingapp.RECIPE_DATA";
     public static final String CURRENT_STEP_OBJECT = "com.ferfig.bakingapp.CURRENT_STEP";
     public static final String CURRENT_VIDEO_POSITION = "com.ferfig.bakingapp.CURRENT_POSITION";
+    public static final String PLAY_WHEN_READY = "com.ferfig.bakingapp.PLAYer_READY";
 
     public static final String DATABASE_NAME = "BackingAppByFF.db";
     public static final String DB_TABLE_RECIPES = "recipes";

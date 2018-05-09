@@ -41,6 +41,7 @@ public class InstructionsFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         mContext = getContext();
+
         if (savedInstanceState == null) {
             Bundle stepData = getArguments();
             if (stepData != null && stepData.containsKey(Utils.CURRENT_STEP_OBJECT)) {

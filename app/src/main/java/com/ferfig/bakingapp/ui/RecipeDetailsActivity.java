@@ -13,7 +13,7 @@ import com.ferfig.bakingapp.ui.fragment.DetailActivityFragment;
 import com.ferfig.bakingapp.ui.fragment.InstructionsFragment;
 import com.ferfig.bakingapp.ui.fragment.VideoPartFragment;
 import com.ferfig.bakingapp.utils.Utils;
-
+import com.ferfig.bakingapp.ui.fragment.UiUtils;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements DetailActivityFragment.OnStepClickedListener{
 
@@ -26,8 +26,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
 
         if (savedInstanceState == null) {
             Intent receivedIntent = getIntent();
-            if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
-                mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
+            if (receivedIntent != null && receivedIntent.hasExtra(com.ferfig.bakingapp.utils.Utils.RECIPE_DATA_OBJECT)) {
+                mRecipeDetails = receivedIntent.getParcelableExtra(com.ferfig.bakingapp.utils.Utils.RECIPE_DATA_OBJECT);
 //TODO retrieve recip from DB
 //                new AsyncTask() {
 //                    @Override
@@ -66,12 +66,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
 
             // Add fragments to display in tablet instead of in new activity
 
-            VideoPartFragment videoPartFragment = createVideoFragment(step);
+            VideoPartFragment videoPartFragment = UiUtils.createVideoFragment(step);
             fragmentManager.beginTransaction()
                     .add(R.id.recipe_step_video_layout, videoPartFragment)
                     .commit();
 
-            InstructionsFragment instructionsFragment = createInstructionsFragment(step);
+            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(step);
             fragmentManager.beginTransaction()
                     .add(R.id.recipe_step_instructions_layout, instructionsFragment)
                     .commit();
@@ -91,12 +91,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
             FragmentManager fragmentManager = getSupportFragmentManager();
 
             // Replace fragments to display in tablet instead of in new activity
-            VideoPartFragment videoPartFragment = createVideoFragment(step);
+            VideoPartFragment videoPartFragment = UiUtils.createVideoFragment(step);
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_video_layout, videoPartFragment)
                     .commit();
 
-            InstructionsFragment instructionsFragment = createInstructionsFragment(step);
+            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(step);
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_instructions_layout, instructionsFragment)
                     .commit();
@@ -106,22 +106,5 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
             intent.putExtra(Utils.CURRENT_STEP_OBJECT, step);
             startActivity(intent);
         }
-    }
-
-    private VideoPartFragment createVideoFragment(Step step) {
-        VideoPartFragment videoPartFragment = new VideoPartFragment();
-        Bundle bundle = new Bundle();
-//        bundle.putParcelable(Utils.RECIPE_DATA_OBJECT, mRecipeDetails);
-        bundle.putParcelable(Utils.CURRENT_STEP_OBJECT, step);
-        videoPartFragment.setArguments(bundle);
-        return videoPartFragment;
-    }
-
-    private InstructionsFragment createInstructionsFragment(Step step) {
-        InstructionsFragment instructionsFragment = new InstructionsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Utils.CURRENT_STEP_OBJECT, step);
-        instructionsFragment.setArguments(bundle);
-        return instructionsFragment;
     }
 }
