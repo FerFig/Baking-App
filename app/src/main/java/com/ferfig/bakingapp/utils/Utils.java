@@ -18,6 +18,7 @@ public class Utils {
     public static final String RECLYCLER_SAVED_INSTANCE = "com.ferfig.bakingapp.RECLYCLER_STATE";
     public static final String RECIPE_DATA_OBJECT = "com.ferfig.bakingapp.RECIPE_DATA";
     public static final String CURRENT_STEP_OBJECT = "com.ferfig.bakingapp.CURRENT_STEP";
+    public static final String SELECT_CURRENT_STEP = "com.ferfig.bakingapp.SELECT_STEP";
     public static final String CURRENT_VIDEO_POSITION = "com.ferfig.bakingapp.CURRENT_POSITION";
     public static final String PLAY_WHEN_READY = "com.ferfig.bakingapp.PLAYer_READY";
 

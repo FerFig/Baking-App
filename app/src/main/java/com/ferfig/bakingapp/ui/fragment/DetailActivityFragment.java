@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.model.entity.Step;
-import com.ferfig.bakingapp.ui.StepDetailsActivity;
 import com.ferfig.bakingapp.ui.adapter.RecipeDetailStepAdapter;
 import com.ferfig.bakingapp.utils.Utils;
 
@@ -30,6 +29,7 @@ public class DetailActivityFragment extends Fragment {
 
     private static Recip mRecipeDetails;
     private Context mContext;
+    private static int mSelectedStep;
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.rvStepsRecyclerView)
@@ -57,10 +57,12 @@ public class DetailActivityFragment extends Fragment {
                 Intent receivedIntent = activity.getIntent();
                 if (receivedIntent != null && receivedIntent.hasExtra(Utils.RECIPE_DATA_OBJECT)) {
                     mRecipeDetails = receivedIntent.getParcelableExtra(Utils.RECIPE_DATA_OBJECT);
+                    mSelectedStep = receivedIntent.getIntExtra(Utils.SELECT_CURRENT_STEP, 0);
                 }
             }
         }else{
             mRecipeDetails = savedInstanceState.getParcelable(Utils.RECIPE_DATA_OBJECT);
+            mSelectedStep = savedInstanceState.getInt(Utils.SELECT_CURRENT_STEP);
         }
 
         if (mRecipeDetails != null) {
@@ -72,19 +74,26 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(Utils.RECIPE_DATA_OBJECT, mRecipeDetails);
-
+        outState.putInt(Utils.SELECT_CURRENT_STEP, mSelectedStep);
         super.onSaveInstanceState(outState);
     }
 
-    private void setStepsAdapter(List<Step> stepsList) {
-        RecipeDetailStepAdapter rvAdapter = new RecipeDetailStepAdapter(mContext,
+    private void setStepsAdapter(final List<Step> stepsList) {
+        final RecipeDetailStepAdapter rvAdapter = new RecipeDetailStepAdapter(mContext,
                 stepsList,
+                mSelectedStep,
                 new RecipeDetailStepAdapter.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(Step stepData) {
+                        for (int i = 0; i < stepsList.size(); i++) {
+                            if (stepsList.get(i).getId().equals(stepData.getId())){
+                                mSelectedStep = i;
+                                break;
+                            }
+                        }
                         //notify the parent activity of the clicked item
-                        mCallback.onStepSelected(stepData);
+                        mCallback.onStepSelected(stepData, mSelectedStep);
                     }
                 });
 
@@ -99,7 +108,7 @@ public class DetailActivityFragment extends Fragment {
     // To communicate between fragments through the host activity ...
     OnStepClickedListener mCallback;
     public interface OnStepClickedListener{
-        void onStepSelected(Step step);
+        void onStepSelected(Step step, int position);
     }
 
     @Override

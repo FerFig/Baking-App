@@ -116,7 +116,7 @@ public class StepDetailsActivity extends AppCompatActivity {
 
         if ( !Utils.isDeviceInLandscape(this) ) {
             // add instruction step details...
-            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(sCurrentStep);
+            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(sCurrentStep, 0); //0 - position is not needed here
             if (fromCreate) {
                 fragmentManager.beginTransaction()
                         .add(R.id.recipe_step_instructions_layout, instructionsFragment)
