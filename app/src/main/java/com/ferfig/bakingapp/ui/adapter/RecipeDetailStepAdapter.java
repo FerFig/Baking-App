@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.model.entity.Step;
+import com.ferfig.bakingapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,21 +75,27 @@ public class RecipeDetailStepAdapter extends RecyclerView.Adapter<RecipeDetailSt
             String stepName = stepData.getShortDescription();
             tvStepName.setText(stepName);
 
-            if (position == mSelectedStep){
-                cardViewItem.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewSelected));
-            }else{
-                cardViewItem.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewBackground));
+            if ( Utils.isTwoPaneLayout(mContext) ) {
+                // highlight selected step in tablet layouts
+                if (position == mSelectedStep) {
+                    cardViewItem.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewSelected));
+                } else {
+                    cardViewItem.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewBackground));
+                }
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     if (listener!=null) {
                         listener.onItemClick(stepData);
-                        for(CardView cardView : mAllCardViewItems){
-                            if (cardViewItem.equals(cardView)) {
-                                cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewSelected));
-                            } else {
-                                cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewBackground));
+                        if ( Utils.isTwoPaneLayout(mContext) ) {
+                            // highlight selected step in tablet layouts
+                            for (CardView cardView : mAllCardViewItems) {
+                                if (cardViewItem.equals(cardView)) {
+                                    cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewSelected));
+                                } else {
+                                    cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorCardViewBackground));
+                                }
                             }
                         }
                     }
