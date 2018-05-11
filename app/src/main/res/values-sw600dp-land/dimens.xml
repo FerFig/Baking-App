@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="video_fragment_weight">60</dimen>
+    <dimen name="instructions_fragment_weight">40</dimen>
+</resources>

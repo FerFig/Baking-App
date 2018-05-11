@@ -33,13 +33,13 @@
             android:id="@+id/recipe_step_video_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="60"
+            android:layout_weight="@dimen/video_fragment_weight"
             android:scaleType="fitStart"/>
 
         <FrameLayout
             android:id="@+id/recipe_step_instructions_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="40"/>
+            android:layout_weight="@dimen/instructions_fragment_weight"/>
     </LinearLayout>
 </LinearLayout>
