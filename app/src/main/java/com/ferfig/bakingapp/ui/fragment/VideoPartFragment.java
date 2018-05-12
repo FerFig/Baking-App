@@ -104,6 +104,8 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
 
     private void initializeExoPlayer() {
         Log.i(Utils.APP_TAG, "initializeExoPlayer: executed");
+        if (Util.SDK_INT < 16) return; //exoplayer needs sdk 16 or upper but I need the sdk 15 to test (at lease non video content) in my old tabled device :)
+
         if (sCurrentStep != null) {
             if (sCurrentStep.getVideoURL().isEmpty()) {
                 if ( Utils.isDeviceInLandscape(mContext) && !Utils.isTwoPaneLayout(mContext) ) {
@@ -319,9 +321,11 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
 
                         // Set the content to appear under the system bars so that the
                         // content doesn't resize when the system bars hide and show.
-                        newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-                        newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-                        newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                        if (Build.VERSION.SDK_INT >= 16) {
+                            newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                            newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                            newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                        }
 
                         decorView.setSystemUiVisibility(newUiOptions);
                         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
