@@ -21,7 +21,7 @@
         android:contentDescription="@string/app_name"
         tools:text="@string/app_name"
         android:textColor="@android:color/white"
-        android:textSize="24sp"/>
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/tv_widget_recipe_ingredients"
@@ -32,8 +32,8 @@
         android:paddingTop="6dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorAccent"
-        tools:text="asdlkfh asdjkfh asdkjfh asdkjfh\n asdkjfh askdljfh\n askdjfh asdklf"
-        android:textSize="22sp"
+        tools:text="@string/widget_loading_error"
+        android:textSize="14sp"
         android:textStyle="bold|italic"/>
 
 </LinearLayout>

@@ -5,7 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.ferfig.bakingapp.R;
+import com.ferfig.bakingapp.model.entity.Ingredient;
 
+import java.util.List;
 import java.util.Locale;
 
 public class Utils {
@@ -27,6 +29,10 @@ public class Utils {
 
     public static final long MEDIA_FF_SEEK_TIME_MS = 15000;
     public static final long MEDIA_RW_SEEK_TIME_MS = 5000;
+
+    private static final String OS_LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final char SINGLE_SPACE_STRING = ' ';
+    private static final char BULLET_STRING = '·';
 
     public static boolean isInternetConectionAvailable(Context context) {
         if (context.getSystemService(Context.CONNECTIVITY_SERVICE)!=null) {
@@ -53,5 +59,22 @@ public class Utils {
             return String.format(Locale.getDefault(), "%d",(long)quantity);
         else
             return String.format("%s", quantity);
+    }
+
+    public static String formatIngredients(Context context, List<Ingredient> ingredients) {
+        StringBuilder allIngredients = new StringBuilder();
+        for (Ingredient ingredient : ingredients) {
+            allIngredients.append(BULLET_STRING);
+            allIngredients.append(SINGLE_SPACE_STRING);
+            allIngredients.append(Utils.formatQuantity(ingredient.getQuantity()));
+            allIngredients.append(SINGLE_SPACE_STRING);
+            allIngredients.append(ingredient.getMeasure());
+            allIngredients.append(SINGLE_SPACE_STRING);
+            allIngredients.append(context.getResources().getString(R.string.Quantity_Ingredient_Separator));
+            allIngredients.append(SINGLE_SPACE_STRING);
+            allIngredients.append(ingredient.getIngredient());
+            allIngredients.append(OS_LINE_SEPARATOR);
+        }
+        return allIngredients.toString();
     }
 }

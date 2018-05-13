@@ -11,4 +11,6 @@
     <string name="IngredientsLabel">Ingredients</string>
     <string name="Quantity_Ingredient_Separator">of</string>
     <string name="step_with_no_video">This step has no video!</string>
+    <string name="configure_widget">Select recipe</string>
+    <string name="widget_loading_error">Oops! Could not load recipes from local database!\nPlease reinstall the application and try again.\nSorry for the inconvenience :(</string>
 </resources>

@@ -10,16 +10,24 @@ import android.widget.RemoteViews;
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.ui.MainActivity;
 
+/**
+ * Implementation of App Widget functionality.
+ * App Widget Configuration implemented in {@link BakingAppWidgetConfigActivity BakingAppWidgetConfigActivity}
+ */
+
 public class BakingAppWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
+        CharSequence widgetText = BakingAppWidgetConfigActivity.getRecipeName(context, appWidgetId);
+        CharSequence widgetIngredients = BakingAppWidgetConfigActivity.getIngredients(context, appWidgetId);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
 
-        views.setTextViewText(R.id.tv_widget_recipe_name, "receita");
-        views.setTextViewText(R.id.tv_widget_recipe_ingredients, "ingredientes\n · Asdkf asd ja\n · Baskljfs\n · Dsdkfj sad  asdak");
+        views.setTextViewText(R.id.tv_widget_recipe_name, widgetText);
+        views.setTextViewText(R.id.tv_widget_recipe_ingredients, widgetIngredients);
 
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -30,6 +38,14 @@ public class BakingAppWidget extends AppWidgetProvider {
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+        for (int appWidgetId : appWidgetIds) {
+            BakingAppWidgetConfigActivity.deleteRecipePref(context, appWidgetId);
+        }
     }
 
     @Override

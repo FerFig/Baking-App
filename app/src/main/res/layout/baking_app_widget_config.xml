@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvSelectionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"
+        android:padding="10dp"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@android:color/white"
+        android:text="@string/configure_widget"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvRecipesSelection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:padding="@dimen/cardview_compat_inset_shadow">
+
+    </android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:id="@+id/pbProgress"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
+
+</LinearLayout>
