@@ -54,19 +54,12 @@ public class Utils {
         return context.getResources().getBoolean(R.bool.isInLandscape);
     }
 
-    public static String formatQuantity(float quantity) {
-        if((long)quantity == quantity)
-            return String.format(Locale.getDefault(), "%d",(long)quantity);
-        else
-            return String.format("%s", quantity);
-    }
-
     public static String formatIngredients(Context context, List<Ingredient> ingredients) {
         StringBuilder allIngredients = new StringBuilder();
         for (Ingredient ingredient : ingredients) {
             allIngredients.append(BULLET_STRING);
             allIngredients.append(SINGLE_SPACE_STRING);
-            allIngredients.append(Utils.formatQuantity(ingredient.getQuantity()));
+            allIngredients.append(formatQuantity(ingredient.getQuantity()));
             allIngredients.append(SINGLE_SPACE_STRING);
             allIngredients.append(ingredient.getMeasure());
             allIngredients.append(SINGLE_SPACE_STRING);
@@ -76,5 +69,12 @@ public class Utils {
             allIngredients.append(OS_LINE_SEPARATOR);
         }
         return allIngredients.toString();
+    }
+
+    private static String formatQuantity(float quantity) {
+        if((long)quantity == quantity)
+            return String.format(Locale.getDefault(), "%d",(long)quantity);
+        else
+            return String.format("%s", quantity);
     }
 }
