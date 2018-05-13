@@ -30,26 +30,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
             if (receivedIntent != null && receivedIntent.hasExtra(com.ferfig.bakingapp.utils.Utils.RECIPE_DATA_OBJECT)) {
                 mRecipeDetails = receivedIntent.getParcelableExtra(com.ferfig.bakingapp.utils.Utils.RECIPE_DATA_OBJECT);
                 mSelectedStep = receivedIntent.getIntExtra(Utils.SELECT_CURRENT_STEP, 0);
-//TODO retrieve recip from DB
-//                new AsyncTask() {
-//                    @Override
-//                    protected Boolean doInBackground(Object[] objects) {
-//                        Boolean b = false;
-//                        if (objects.length == 1) {
-//                            Integer recipId = (Integer) objects[0];
-//                            BakingAppDB bakingAppDB = BakingAppDB.getInstance(getApplicationContext());
-//                            RecipDao recipDao = bakingAppDB.recipDao();
-//                            Recip mRecipFromDB;
-//                            mRecipFromDB = recipDao.getRecipById(recipId);
-//                            if (mRecipeDetails.getId() == mRecipFromDB.getId()){
-//                                b = true;
-//                            }else {
-//                                b = false;
-//                            }
-//                        }
-//                        return b;
-//                    }
-//                }.execute(mRecipeDetails.getId());
 
             }else{//is not supposed too...
                 Toast.makeText(getApplicationContext(), R.string.ImplementationErrorMessage, Toast.LENGTH_SHORT).show();
