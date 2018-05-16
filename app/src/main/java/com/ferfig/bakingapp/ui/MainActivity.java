@@ -3,13 +3,15 @@ package com.ferfig.bakingapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,7 +20,6 @@ import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.api.HttpRecipsClient;
 import com.ferfig.bakingapp.model.dao.RecipDao;
 import com.ferfig.bakingapp.model.database.BakingAppDB;
-import com.ferfig.bakingapp.model.entity.Ingredient;
 import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.model.entity.Step;
 import com.ferfig.bakingapp.ui.adapter.MainActivityRecipesAdapter;
@@ -42,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
     static List<Recip> mRecipList;
 
+    // Idling Resource counter needed for espresso tests
+    private static CountingIdlingResource sIdlingResourceCounter;
+    public CountingIdlingResource getIdlingResourceCounter() {
+        return sIdlingResourceCounter;
+    }
+
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.rvMainRecyclerView)
     RecyclerView rvMainRecyclerView;
@@ -60,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        // Idling Resource counter needed for espresso tests
+        sIdlingResourceCounter = new CountingIdlingResource(Utils.APP_TAG);
+
         //Always prepare the recycler view LayoutManager
         rvMainRecyclerView.setLayoutManager(setupMainLayoutManager());
 
@@ -110,6 +121,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             if (Utils.isInternetConectionAvailable(this)){
+
+                sIdlingResourceCounter.increment();
+
                 Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
                         .baseUrl(Utils.RECIPS_URL_DATA)
                         .addConverterFactory(GsonConverterFactory.create());
@@ -125,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
 
                             setMainRecipAdapter(mRecipList);
 
+                            sIdlingResourceCounter.increment();
+
                             saveToDatabase(new WeakReference<>(getApplicationContext()));
 
                             pbProgressBar.setVisibility(View.GONE);
@@ -138,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
                             tvErrorMessage.setVisibility(View.VISIBLE);
                             tvErrorMessage.setText(R.string.error_failed_response);
                         }
+
+                        sIdlingResourceCounter.decrement();
                     }
 
                     @Override
@@ -146,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                         rvMainRecyclerView.setVisibility(View.GONE);
                         tvErrorMessage.setVisibility(View.VISIBLE);
                         tvErrorMessage.setText(R.string.error_failed_network_request);
+
+                        sIdlingResourceCounter.decrement();
                     }
                 });
 
@@ -165,13 +185,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 if (objects.length == 1) {
-                    List<Recip> mRecipes = (List<Recip>) objects[0];
-                    BakingAppDB bakingAppDB = BakingAppDB.getInstance(weakContext.get());
-                    RecipDao recipDao = bakingAppDB.recipDao();
-                    recipDao.insertAll(mRecipes);
-                    bakingAppDB.close();
+                    try {
+                        List<Recip> mRecipes = (List<Recip>) objects[0];
+                        BakingAppDB bakingAppDB = BakingAppDB.getInstance(weakContext.get());
+                        RecipDao recipDao = bakingAppDB.recipDao();
+                        recipDao.insertAll(mRecipes);
+                        bakingAppDB.close();
+                    }catch (Exception e)
+                    {
+                        Log.d(Utils.APP_TAG, "Error in saveToDatabase: "+e.getMessage());
+                    }
                 }
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
+                sIdlingResourceCounter.decrement();
             }
         }.execute(mRecipList);
     }

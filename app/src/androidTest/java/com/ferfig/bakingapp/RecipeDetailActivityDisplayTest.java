@@ -1,13 +1,16 @@
 package com.ferfig.bakingapp;
 
-import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.ferfig.bakingapp.ui.MainActivity;
 import com.ferfig.bakingapp.ui.adapter.MainActivityRecipesAdapter;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,9 +27,20 @@ public class RecipeDetailActivityDisplayTest {
 
     private static final String RECIPE_NAME = "Nutella Pie";
 
+    private CountingIdlingResource mMainActivityIdlingResource;
+
     @Rule
     public ActivityTestRule<MainActivity> mMainActivity =
         new ActivityTestRule<>(MainActivity.class);
+
+    @Before
+    public void setIdlingResources(){
+        MainActivity mainActivity = mMainActivity.getActivity();
+        if ( mainActivity != null) {
+            mMainActivityIdlingResource = mainActivity.getIdlingResourceCounter();
+            IdlingRegistry.getInstance().register(mMainActivityIdlingResource);
+        }
+    }
 
     @Test
     public void display1stRecipeDetailsScreen(){
@@ -35,5 +49,10 @@ public class RecipeDetailActivityDisplayTest {
                 RecyclerViewActions.<MainActivityRecipesAdapter.RecipsViewHolder>actionOnItemAtPosition(0, click()));
         // check if the details activity is displayed
         onView(withText(RECIPE_NAME)).check(matches(isDisplayed()));
+    }
+
+    @After
+    public void unsetIdlingResources(){
+        IdlingRegistry.getInstance().unregister(mMainActivityIdlingResource);
     }
 }
