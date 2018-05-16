@@ -73,7 +73,14 @@ public class RecipeDetailStepAdapter extends RecyclerView.Adapter<RecipeDetailSt
 
         void bind(final Step stepData, final int position, final OnItemClickListener listener) {
             String stepName = stepData.getShortDescription();
-            tvStepName.setText(stepName);
+            String mPrefix;
+            if ( position == 0 ) {
+                mPrefix = "· ";
+            }
+            else{
+                mPrefix = String.format("%s%s", String.valueOf(position), ".");
+            }
+            tvStepName.setText(String.format("%s %s", mPrefix, stepName));
 
             if ( Utils.isTwoPaneLayout(mContext) ) {
                 // highlight selected step in tablet layouts

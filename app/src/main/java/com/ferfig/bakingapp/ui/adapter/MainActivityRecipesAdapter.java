@@ -54,6 +54,9 @@ public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivit
         @BindView(R.id.tvRecipName)
         TextView tvRecipName;
 
+        @BindView(R.id.tvServings)
+        TextView tvServings;
+
         public RecipsViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -61,7 +64,10 @@ public class MainActivityRecipesAdapter extends RecyclerView.Adapter<MainActivit
 
         public void bind(final Recip recipData, final OnItemClickListener listener) {
             String recipName = recipData.getName();
+            Integer servings = recipData.getServings();
+
             tvRecipName.setText(recipName);
+            tvServings.setText(String.valueOf(servings));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
