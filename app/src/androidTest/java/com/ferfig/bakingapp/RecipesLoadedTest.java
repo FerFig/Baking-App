@@ -31,7 +31,7 @@ public class RecipesLoadedTest {
 
     @Test
     public void checkRecipesLoaded(){
-        //check that all the 4 recipes are loaded
+        //check that all the recipes are loaded
         onView(withId(R.id.rvMainRecyclerView)).check(
                 new RecyclerViewAdapterItemCountAssertion(is(TOTAL_NUM_RECIPES)));
     }
