@@ -17,7 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ferfig.bakingapp.R;
+import com.ferfig.bakingapp.api.BakingDbAsyncResponse;
 import com.ferfig.bakingapp.api.HttpRecipsClient;
+import com.ferfig.bakingapp.api.LoadRecipesFromLocalDB;
 import com.ferfig.bakingapp.model.dao.RecipDao;
 import com.ferfig.bakingapp.model.database.BakingAppDB;
 import com.ferfig.bakingapp.model.entity.Recip;
@@ -37,7 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BakingDbAsyncResponse {
     private static final Integer INGREDIENTS_STEP_ID = 927;
     private static final String EMPTY_STRING = "";
 
@@ -171,13 +173,35 @@ public class MainActivity extends AppCompatActivity {
 
             }else{
                 //No network connectivity :(
-                pbProgressBar.setVisibility(View.GONE);
-                rvMainRecyclerView.setVisibility(View.GONE);
-                tvErrorMessage.setVisibility(View.VISIBLE);
-                tvErrorMessage.setText(R.string.error_no_network);
+                //try to get recipes from local db if possible
+                sIdlingResourceCounter.increment();
+                new LoadRecipesFromLocalDB(this).execute(getApplicationContext());
             }
 
         }
+    }
+
+    @Override
+    public void recipesLoadSuccess(@NonNull List<Recip> recipsList) {
+        mRecipList = recipsList;
+
+        setMainRecipAdapter(mRecipList);
+
+        pbProgressBar.setVisibility(View.GONE);
+        rvMainRecyclerView.setVisibility(View.VISIBLE);
+        tvErrorMessage.setVisibility(View.GONE);
+
+        sIdlingResourceCounter.decrement();
+    }
+
+    @Override
+    public void recipesLoadFailed() {
+        pbProgressBar.setVisibility(View.GONE);
+        rvMainRecyclerView.setVisibility(View.GONE);
+        tvErrorMessage.setVisibility(View.VISIBLE);
+        tvErrorMessage.setText(R.string.error_no_network);
+
+        sIdlingResourceCounter.decrement();
     }
 
     private static void saveToDatabase(final WeakReference<Context> weakContext) {
@@ -243,5 +267,4 @@ public class MainActivity extends AppCompatActivity {
             recipData.setSteps(allSteps);
         }
     }
-
 }
