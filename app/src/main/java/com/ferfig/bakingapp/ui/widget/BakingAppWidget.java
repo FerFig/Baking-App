@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.ferfig.bakingapp.R;
-import com.ferfig.bakingapp.ui.MainActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -29,7 +28,8 @@ public class BakingAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.tv_widget_recipe_name, widgetText);
         views.setTextViewText(R.id.tv_widget_recipe_ingredients, widgetIngredients);
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, BakingAppWidgetConfigActivity.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId); //set this widget id
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         views.setOnClickPendingIntent(R.id.widget_screen, pendingIntent);
