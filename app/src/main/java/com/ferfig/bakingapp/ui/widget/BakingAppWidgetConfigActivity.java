@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 
 /**
  * The configuration screen for the {@link BakingAppWidget BakingAppWidget} AppWidget.
+ *
  */
 public class BakingAppWidgetConfigActivity extends Activity implements BakingDbAsyncResponse {
 

@@ -39,6 +39,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/** Created by FerFig for Udacity Android Nanodegree Project 3 */
+
 public class MainActivity extends AppCompatActivity implements BakingDbAsyncResponse {
     private static final Integer INGREDIENTS_STEP_ID = 927;
     private static final String EMPTY_STRING = "";
