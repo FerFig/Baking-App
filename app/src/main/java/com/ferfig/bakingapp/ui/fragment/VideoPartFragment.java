@@ -106,6 +106,8 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
         Log.i(Utils.APP_TAG, "initializeExoPlayer: executed");
         if (Util.SDK_INT < 16) return; //exoplayer needs sdk 16 or upper but I need the sdk 15 to test (at lease non video content) in my old tabled device :)
 
+        if (!Utils.isInternetConectionAvailable(mContext)) return; //if there is no internet, no video can be shown also :(
+
         if (sCurrentStep != null) {
             if (sCurrentStep.getVideoURL().isEmpty()) {
                 if ( Utils.isDeviceInLandscape(mContext) && !Utils.isTwoPaneLayout(mContext) ) {
