@@ -64,9 +64,9 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
 
     Unbinder mBkUnbinder;
 
-    static Step sCurrentStep;
-    static Long sCurrentPlayerPosition;
-    static boolean sPlayWhenReady = true;
+    Step sCurrentStep;
+    Long sCurrentPlayerPosition;
+    boolean sPlayWhenReady = true;
 
     static MediaSessionCompat sMediaSession;
     static PlaybackStateCompat.Builder sPlaybackStateBuilder;
@@ -77,6 +77,9 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.i(Utils.APP_TAG, "VIDEO FRAGMENT: onCreateView");
+
         View rootView = inflater.inflate(R.layout.fragment_video_player, container, false);
 
         mBkUnbinder = ButterKnife.bind(this, rootView);
@@ -228,9 +231,7 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
         Log.i(Utils.APP_TAG, "releaseExoPlayer: executed");
         if (mExoPlayer != null) {
             // Store the position case we come back to this video after screen configurations changes...
-            sCurrentPlayerPosition = mExoPlayer.getCurrentPosition();
-            sPlayWhenReady = mExoPlayer.getPlayWhenReady();
-
+            getCurrentDataFromPlayer();
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -284,15 +285,25 @@ public class VideoPartFragment extends Fragment implements Player.EventListener 
         }
         if (sMediaSession != null) {
             sMediaSession.setActive(false);
+            sMediaSession.release();
+            sMediaSession = null;
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(Utils.CURRENT_STEP_OBJECT, sCurrentStep);
+        getCurrentDataFromPlayer();
         outState.putBoolean(Utils.PLAY_WHEN_READY, sPlayWhenReady);
         outState.putLong(Utils.CURRENT_VIDEO_POSITION, sCurrentPlayerPosition);
         super.onSaveInstanceState(outState);
+    }
+
+    private void getCurrentDataFromPlayer() {
+        if (mExoPlayer!=null) {
+            sCurrentPlayerPosition = mExoPlayer.getCurrentPosition();
+            sPlayWhenReady = mExoPlayer.getPlayWhenReady();
+        }
     }
 
     private void toggleFullScreenIfNeeded() {

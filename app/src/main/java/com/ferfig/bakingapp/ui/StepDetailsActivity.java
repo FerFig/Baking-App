@@ -8,7 +8,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ferfig.bakingapp.R;
@@ -102,28 +101,45 @@ public class StepDetailsActivity extends AppCompatActivity {
     private void showCurrentStepUI(boolean fromCreate) {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        // Add/Replace fragments to display new step information
-        VideoPartFragment videoPartFragment = UiUtils.createVideoFragment(sCurrentStep);
-        if (fromCreate) {
+        // Add/Replace fragments to display new step information as needed
+
+        boolean isNewVideoFragment = false;
+        VideoPartFragment videoPartFragment = (VideoPartFragment)fragmentManager.
+                findFragmentByTag(Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.VIDEO));
+        if ( videoPartFragment == null ){
+            videoPartFragment = UiUtils.createVideoFragment(sCurrentStep);
+            isNewVideoFragment = true;
+        }
+        if (fromCreate && isNewVideoFragment) {
             fragmentManager.beginTransaction()
-                    .add(R.id.recipe_step_video_layout, videoPartFragment)
+                    .add(R.id.recipe_step_video_layout, videoPartFragment,
+                            Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.VIDEO))
                     .commit();
         } else {
             fragmentManager.beginTransaction()
-                    .replace(R.id.recipe_step_video_layout, videoPartFragment)
+                    .replace(R.id.recipe_step_video_layout, videoPartFragment,
+                            Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.VIDEO))
                     .commit();
         }
 
         if ( !Utils.isDeviceInLandscape(this) ) {
             // add instruction step details...
-            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(sCurrentStep, 0); //0 - position is not needed here
-            if (fromCreate) {
+            boolean isNewInstructions = false;
+            InstructionsFragment instructionsFragment = (InstructionsFragment)fragmentManager.
+                    findFragmentByTag(Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.INSTRUCTIONS));
+            if ( instructionsFragment == null ) {
+                instructionsFragment = UiUtils.createInstructionsFragment(sCurrentStep, 0); //0 - position is not needed here
+                isNewInstructions = true;
+            }
+            if (fromCreate && isNewInstructions) {
                 fragmentManager.beginTransaction()
-                        .add(R.id.recipe_step_instructions_layout, instructionsFragment)
+                        .add(R.id.recipe_step_instructions_layout, instructionsFragment,
+                                Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.INSTRUCTIONS))
                         .commit();
             } else {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.recipe_step_instructions_layout, instructionsFragment)
+                        .replace(R.id.recipe_step_instructions_layout, instructionsFragment,
+                                Utils.getFragmentTag(sCurrentStep, Utils.FragmentType.INSTRUCTIONS))
                         .commit();
             }
             //... and navigation options
@@ -137,11 +153,5 @@ public class StepDetailsActivity extends AppCompatActivity {
                         .get(sRecipeDetails.getSteps().size() - 1).getId()) /* Is not last step */);
             }
         }
-    }
-
-    public void showInFullscreen() {
-        this.getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 }

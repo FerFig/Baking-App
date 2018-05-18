@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.ferfig.bakingapp.R;
 import com.ferfig.bakingapp.model.entity.Ingredient;
+import com.ferfig.bakingapp.model.entity.Step;
 
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +24,8 @@ public class Utils {
     public static final String SELECT_CURRENT_STEP = "com.ferfig.bakingapp.SELECT_STEP";
     public static final String CURRENT_VIDEO_POSITION = "com.ferfig.bakingapp.CURRENT_POSITION";
     public static final String PLAY_WHEN_READY = "com.ferfig.bakingapp.PLAYer_READY";
+    private static final Object VIDEO_FRAGMENT = "com.ferfig.bakingapp.VIDEO_FRAGMENT";
+    public enum FragmentType {VIDEO, INSTRUCTIONS}
 
     public static final String DATABASE_NAME = "BackingAppByFF.db";
     public static final String DB_TABLE_RECIPES = "recipes";
@@ -76,5 +79,9 @@ public class Utils {
             return String.format(Locale.getDefault(), "%d",(long)quantity);
         else
             return String.format("%s", quantity);
+    }
+
+    public static String getFragmentTag(Step sCurrentStep, FragmentType fragment_type) {
+        return String.format("%s-%s:%s", VIDEO_FRAGMENT, sCurrentStep.getId(), fragment_type);
     }
 }

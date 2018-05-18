@@ -1,9 +1,9 @@
 package com.ferfig.bakingapp.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.ferfig.bakingapp.R;
@@ -11,9 +11,9 @@ import com.ferfig.bakingapp.model.entity.Recip;
 import com.ferfig.bakingapp.model.entity.Step;
 import com.ferfig.bakingapp.ui.fragment.DetailActivityFragment;
 import com.ferfig.bakingapp.ui.fragment.InstructionsFragment;
+import com.ferfig.bakingapp.ui.fragment.UiUtils;
 import com.ferfig.bakingapp.ui.fragment.VideoPartFragment;
 import com.ferfig.bakingapp.utils.Utils;
-import com.ferfig.bakingapp.ui.fragment.UiUtils;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements DetailActivityFragment.OnStepClickedListener{
 
@@ -45,19 +45,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
         if (Utils.isTwoPaneLayout(this)){
             Step step = mRecipeDetails.getSteps().get(mSelectedStep);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
-            // Add fragments to display in tablet instead of in new activity
-
-            VideoPartFragment videoPartFragment = UiUtils.createVideoFragment(step);
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_step_video_layout, videoPartFragment)
-                    .commit();
-
-            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(step, mSelectedStep);
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_step_instructions_layout, instructionsFragment)
-                    .commit();
+            setupFragments(step, true);
         }
 
     }
@@ -74,23 +62,57 @@ public class RecipeDetailsActivity extends AppCompatActivity implements DetailAc
         if (Utils.isTwoPaneLayout(this)) {
             mSelectedStep = position;
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            setupFragments(step, false);
 
-            // Replace fragments to display in tablet instead of in new activity
-            VideoPartFragment videoPartFragment = UiUtils.createVideoFragment(step);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.recipe_step_video_layout, videoPartFragment)
-                    .commit();
-
-            InstructionsFragment instructionsFragment = UiUtils.createInstructionsFragment(step, mSelectedStep);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.recipe_step_instructions_layout, instructionsFragment)
-                    .commit();
         }else{
             Intent intent = new Intent(this, StepDetailsActivity.class);
             intent.putExtra(Utils.RECIPE_DATA_OBJECT, mRecipeDetails);
             intent.putExtra(Utils.CURRENT_STEP_OBJECT, step);
             startActivity(intent);
+        }
+    }
+
+    private void setupFragments(Step step, boolean fromCreate) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // Replace fragments to display in tablet instead of in new activity
+
+        boolean isNewVideoFragment = false;
+        VideoPartFragment videoPartFragment = (VideoPartFragment)fragmentManager.
+                findFragmentByTag(Utils.getFragmentTag(step, Utils.FragmentType.VIDEO));
+        if (videoPartFragment == null) {
+            videoPartFragment = UiUtils.createVideoFragment(step);
+            isNewVideoFragment = true;
+        }
+        if (fromCreate && isNewVideoFragment){
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipe_step_video_layout, videoPartFragment,
+                            Utils.getFragmentTag(step, Utils.FragmentType.VIDEO))
+                    .commit();
+        }else{
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_video_layout, videoPartFragment,
+                            Utils.getFragmentTag(step, Utils.FragmentType.VIDEO))
+                    .commit();
+        }
+
+        boolean isNewInstructions = false;
+        InstructionsFragment instructionsFragment = (InstructionsFragment)fragmentManager.
+                findFragmentByTag(Utils.getFragmentTag(step, Utils.FragmentType.INSTRUCTIONS));
+        if (instructionsFragment == null) {
+            instructionsFragment = UiUtils.createInstructionsFragment(step, mSelectedStep);
+            isNewInstructions = true;
+        }
+        if (fromCreate && isNewInstructions){
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipe_step_instructions_layout, instructionsFragment,
+                            Utils.getFragmentTag(step, Utils.FragmentType.INSTRUCTIONS))
+                    .commit();
+        }else{
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_instructions_layout, instructionsFragment,
+                            Utils.getFragmentTag(step, Utils.FragmentType.INSTRUCTIONS))
+                    .commit();
         }
     }
 }
