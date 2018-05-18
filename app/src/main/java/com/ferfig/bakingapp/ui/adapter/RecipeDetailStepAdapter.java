@@ -78,7 +78,7 @@ public class RecipeDetailStepAdapter extends RecyclerView.Adapter<RecipeDetailSt
                 mPrefix = "· ";
             }
             else{
-                mPrefix = String.format("%s%s", String.valueOf(position), ".");
+                mPrefix = String.format("%s%s", String.valueOf(position-1), ".");
             }
             tvStepName.setText(String.format("%s %s", mPrefix, stepName));
 
